@@ -1,23 +1,28 @@
-name: Test InfoRadar Connection
+name: Test Polymarket Monitor
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-inforadar:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test InfoRadar
-        run: |
-          echo "Testing InfoRadar..."
-          curl -L -v --connect-timeout 15 --max-time 30 \
-            -o inforadar.html \
-            -w "HTTP STATUS: %{http_code}\nBYTES: %{size_download}\n" \
-            "https://inforadar.live/"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          echo "Downloaded:"
-          wc -c inforadar.html
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-          echo "First part of response:"
-          head -c 500 inforadar.html
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run logic tests
+        run: python test_logic.py
+
+      - name: Test Polymarket
+        env:
+          DRY_RUN: "true"
+        run: python polymarket_monitor.py
