@@ -22,7 +22,7 @@ jobs:
       - name: Run logic tests
         run: python test_logic.py
 
-      - name: Test Polymarket
+      - name: Test Polymarket basketball
         env:
           DRY_RUN: "true"
         run: python polymarket_monitor.py
