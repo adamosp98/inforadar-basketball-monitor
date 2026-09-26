@@ -1,0 +1,23 @@
+name: Test InfoRadar Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-inforadar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test InfoRadar
+        run: |
+          echo "Testing InfoRadar..."
+          curl -L -v --connect-timeout 15 --max-time 30 \
+            -o inforadar.html \
+            -w "HTTP STATUS: %{http_code}\nBYTES: %{size_download}\n" \
+            "https://inforadar.live/"
+
+          echo "Downloaded:"
+          wc -c inforadar.html
+
+          echo "First part of response:"
+          head -c 500 inforadar.html
